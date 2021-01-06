@@ -1,3 +1,4 @@
+//import { Post } from './posts/post.model';
 import { Component } from '@angular/core';
 
 @Component({
@@ -6,5 +7,9 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'Udemy-MEAN-Stack';
+  // storedPosts: Post[] = [];
+
+  // onPostAdded(post: Post) {
+  //   this.storedPosts.push(post);
+  // }
 }
