@@ -4,7 +4,11 @@ import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 
+import { environment } from "../../environments/environment"
 import { Post } from './post.model';
+
+const BACKEND_URL = environment.apiUrl + "/posts/";
+
 @Injectable({
   providedIn: 'root'
 })
@@ -20,7 +24,7 @@ export class PostsService {
     const queryParams = `?pageSize=${postsPerPage}&page=${currentPage}`;//check on backend to be the same names for queryParams
     this.http
       .get<{ message: string, posts: any, maxPosts: number }>(
-        "http://localhost:3000/api/posts" + queryParams
+        BACKEND_URL + queryParams
       )
       .pipe(
         map((postData) => {
@@ -64,7 +68,7 @@ export class PostsService {
     postData.append("image", image, title);// name image should be equal with multer(storage).single("image") as in backend
     this.http
       .post<{ message: string, post: Post }>(
-        'http://localhost:3000/api/posts',
+        BACKEND_URL,
         postData
       )
       .subscribe((responseData) => {
@@ -98,7 +102,7 @@ export class PostsService {
       };
     }
     this.http
-      .put('http://localhost:3000/api/posts/' + id, postData)
+      .put(BACKEND_URL + id, postData)
       .subscribe((responseData) => {
         // const updatedPosts = [...this.posts];
         // const oldPostIndex = updatedPosts.findIndex(p => p.id === id);
@@ -116,7 +120,7 @@ export class PostsService {
   }
 
   deletePost(postId: string) {
-    return this.http.delete("http://localhost:3000/api/posts/" + postId)
+    return this.http.delete(BACKEND_URL + postId)
       // .subscribe(() => {
       //   const updatedPosts = this.posts.filter(post => post.id !== postId);
       //   this.posts = updatedPosts;

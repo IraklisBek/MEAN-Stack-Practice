@@ -4,11 +4,13 @@ const bodyParser = require("body-parser");
 const mongoose = require('mongoose');
 
 const postsRoutes = require("./routes/posts")
-const userRoutes = require("./routes/user")
+const userRoutes = require("./routes/auth")
 
 const app = express();
 
-mongoose.connect("mongodb+srv://bekiaris:NA5QOwiZh3eZQAyf@cluster0.2wlci.mongodb.net/mean-stack-practice?retryWrites=true&w=majority")
+mongoose.connect("mongodb+srv://bekiaris:" +
+    process.env.MONGO_ATLAS_PW +
+    "@cluster0.2wlci.mongodb.net/mean-stack-practice?retryWrites=true&w=majority")
     .then(() => {
         console.log("Connected to Database");
     })
