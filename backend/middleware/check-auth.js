@@ -9,7 +9,11 @@ const jwt = require("jsonwebtoken");
 module.exports = (req, res, next) => {
     try {
         const token = req.headers.authorization.split(" ")[1]; // see interceptor
-        jwt.verify(token, "secret_this_should_be_longer");
+        const decodedToken = jwt.verify(token, "secret_this_should_be_longer");
+        req.userData = {
+            email: decodedToken.email,
+            userId: decodedToken.userId
+        }//new field, i am using it to the next middleware (check router.post in posts)
         next();
     } catch (error) {
         res.status(401).json({message: "Auth Failed", error: error});
