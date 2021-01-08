@@ -1,16 +1,18 @@
 import { PostsService } from './../posts.service';
-import { Component, OnInit, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
 import { Post } from './../post.model';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { mimeType } from './mime-type.validator';
+import { Subscription } from 'rxjs';
+import { AuthService } from 'src/app/auth/auth.service';
 
 @Component({
   selector: 'app-post-create',
   templateUrl: './post-create.component.html',
   styleUrls: ['./post-create.component.scss']
 })
-export class PostCreateComponent implements OnInit {
+export class PostCreateComponent implements OnInit, OnDestroy {
   titleError = ""
   contentError = ""
   //@Output() postCreated = new EventEmitter<Post>();
@@ -20,10 +22,14 @@ export class PostCreateComponent implements OnInit {
   private node = 'create';
   private postId: string;
   public post: Post;//does not need to say new post or check for undefined in the html, just add question mark in html
+  private authStatusSub: Subscription;
 
-  constructor(public postsService: PostsService, public route: ActivatedRoute) { }
+  constructor(public postsService: PostsService, public route: ActivatedRoute, private authService: AuthService) { }
 
   ngOnInit() {
+    this.authStatusSub = this.authService.getAuthStatusListener().subscribe(authStatus => {
+      this.isLoading = false;
+    });
     this.form = new FormGroup({
       title: new FormControl(null, {
         validators: [Validators.required, Validators.minLength(3)]
@@ -98,30 +104,6 @@ export class PostCreateComponent implements OnInit {
     }
   }
 
-  // onSavePost(form: NgForm) {
-  //   if (form.invalid) {
-  //     return
-  //   }
-  //   this.isLoading = true;
-  //   if (this.node === 'create') {
-  //     this.postsService.addPost(form.value.title, form.value.content);
-  //   } else {
-  //     this.postsService.updatePost(
-  //       this.postId,
-  //       form.value.title,
-  //       form.value.content
-  //     );
-  //   }
-  //   if (!this.getTitleErrorMsg(form) && !this.getContentErrorMsg(form)) {
-  //     form.resetForm();
-  //   }
-  //   // const post: Post = {
-  //   //   title: form.value.title,
-  //   //   content: form.value.content
-  //   // };
-  //   //this.postCreated.emit(post);
-  // }
-
   getTitleErrorMsg() {
     var postTitle = this.form.value.title;
     if (postTitle != null) {
@@ -170,4 +152,7 @@ export class PostCreateComponent implements OnInit {
   //   }
   // }
 
+  ngOnDestroy(){
+    this.authStatusSub.unsubscribe();
+  }
 }

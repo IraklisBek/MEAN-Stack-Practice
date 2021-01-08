@@ -16,6 +16,6 @@ module.exports = (req, res, next) => {
         }//new field, i am using it to the next middleware (check router.post in posts)
         next();
     } catch (error) {
-        res.status(401).json({message: "Auth Failed", error: error});
+        res.status(401).json({message: "You are not authenticated", error: error});
     }
 };
