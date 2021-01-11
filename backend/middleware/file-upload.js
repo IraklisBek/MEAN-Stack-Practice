@@ -13,7 +13,7 @@ const storage = multer.diskStorage({
         if (isValid) {
             error = null;
         }
-        cb(error, "backend/images"); //the path is relative with where server.js is
+        cb(error, "images"); //the path is relative with where server.js is
     },
     filename: (req, file, cb) => {
         const name = file.originalname.toLowerCase().split(' ').join('-');
